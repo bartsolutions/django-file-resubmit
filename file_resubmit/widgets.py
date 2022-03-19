@@ -7,6 +7,7 @@ from django.forms.widgets import FILE_INPUT_CONTRADICTION
 from django.conf import settings
 from django.forms import ClearableFileInput
 from django.utils.safestring import mark_safe
+from django.utils.html import escape
 
 from .cache import FileCache
 
@@ -42,7 +43,9 @@ class ResubmitBaseWidget(ClearableFileInput):
     def output_extra_data(self, value):
         output = ''
         if value and self.cache_key:
-            output += ' ' + self.filename_from_value(value)
+            filename = self.filename_from_value(value)
+            filename = escape(filename)
+            output += ' ' + filename
         if self.cache_key:
             output += forms.HiddenInput().render(
                 self.input_name,
